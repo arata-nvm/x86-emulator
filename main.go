@@ -70,6 +70,10 @@ func (emu *Emulator) getCode32(index int) uint32 {
 	return ret
 }
 
+func (emu *Emulator) getSignCode32(index int) int32 {
+	return int32(emu.getCode32(index))
+}
+
 func moveR32Imm32(emu *Emulator) {
 	reg := emu.getCode8(0) - 0xB8
 	value := emu.getCode32(1)
@@ -82,10 +86,16 @@ func shortJump(emu *Emulator) {
 	emu.Eip += uint32(diff + 2)
 }
 
+func nearJump(emu *Emulator) {
+	diff := emu.getSignCode32(1)
+	emu.Eip += uint32(diff + 5)
+}
+
 func initInstructions() {
 	for i := 0; i < 8; i++ {
 		instructions[0xB8+i] = moveR32Imm32
 	}
+	instructions[0xE9] = nearJump
 	instructions[0xEB] = shortJump
 }
 
@@ -95,7 +105,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	emu := NewEmulator(0x0000, 0x7c00)
+	emu := NewEmulator(0x7c00, 0x7c00)
 
 	f, err := os.Open(os.Args[1])
 	if err != nil {
@@ -103,7 +113,7 @@ func main() {
 	}
 	defer f.Close()
 
-	f.Read(emu.Memory)
+	f.Read(emu.Memory[0x7c00:])
 
 	initInstructions()
 
