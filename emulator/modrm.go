@@ -69,6 +69,32 @@ func (emu *Emulator) getR32(modrm *ModRM) uint32 {
 	return emu.getRegister32(int(modrm.RegIndex))
 }
 
+func (emu *Emulator) setR8(modrm *ModRM, value uint8) {
+	emu.setRegister8(int(modrm.RegIndex), value)
+}
+
+func (emu *Emulator) getR8(modrm *ModRM) uint8 {
+	return emu.getRegister8(int(modrm.RegIndex))
+}
+
+func (emu *Emulator) setRm8(modrm *ModRM, value uint8) {
+	if modrm.Mod == 3 {
+		emu.setRegister8(int(modrm.Rm), value)
+	} else {
+		address := emu.calcMemoryAddress(modrm)
+		emu.setMemory8(address, uint32(value))
+	}
+}
+
+func (emu *Emulator) getRm8(modrm *ModRM) uint8 {
+	if modrm.Mod == 3 {
+		return emu.getRegister8(int(modrm.Rm))
+	} else {
+		address := emu.calcMemoryAddress(modrm)
+		return uint8(emu.getMemory8(address))
+	}
+}
+
 func (emu *Emulator) calcMemoryAddress(modrm *ModRM) uint32 {
 	if modrm.Mod == 0 {
 		if modrm.Rm == 4 {

@@ -28,6 +28,24 @@ func (emu *Emulator) getSignCode32(index int) int32 {
 	return int32(emu.getCode32(index))
 }
 
+func (emu *Emulator) getRegister8(index int) uint8 {
+	if index < 4 {
+		return uint8(emu.Registers[index] & 0xff)
+	} else {
+		return uint8((emu.Registers[index-4] >> 6) & 0xff)
+	}
+}
+
+func (emu *Emulator) setRegister8(index int, value uint8) {
+	if index < 4 {
+		r := emu.Registers[index] & 0xffffff00
+		emu.Registers[index] = r | uint32(value)
+	} else {
+		r := emu.Registers[index-4] & 0xffff00ff
+		emu.Registers[index-4] = r | uint32(value<<8)
+	}
+}
+
 func (emu *Emulator) getRegister32(index int) uint32 {
 	return emu.Registers[index]
 }

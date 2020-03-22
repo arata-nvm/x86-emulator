@@ -18,6 +18,14 @@ const (
 	EBP
 	ESI
 	EDI
+	AL = EAX
+	CL = ECX
+	DL = EDX
+	BL = EBX
+	AH = AL + 4
+	CH = CL + 4
+	DH = DL + 4
+	BH = BL + 4
 )
 
 type Emulator struct {
@@ -59,12 +67,14 @@ func (emu *Emulator) ReadBinary(filename string) {
 	f.Read(emu.Memory[0x7c00:])
 }
 
-func (emu *Emulator) Execute() {
+func (emu *Emulator) Execute(quiet bool) {
 	initInstructions()
 
 	for emu.Eip < uint32(len(emu.Memory)) {
 		code := emu.getCode8(0)
-		fmt.Printf("EIP = %X, Code = %02X\n", emu.Eip, code)
+		if !quiet {
+			fmt.Printf("EIP = %X, Code = %02X\n", emu.Eip, code)
+		}
 
 		if instructions[code] == nil {
 			fmt.Printf("Not Implemented: %x\n", code)
