@@ -50,3 +50,15 @@ func (emu *Emulator) getMemory32(address uint32) uint32 {
 	}
 	return ret
 }
+func (emu *Emulator) push32(value uint32) {
+	address := emu.getRegister32(ESP) - 4
+	emu.setRegister32(ESP, address)
+	emu.setMemory32(address, value)
+}
+
+func (emu *Emulator) pop32() uint32 {
+	address := emu.getRegister32(ESP)
+	ret := emu.getMemory32(address)
+	emu.setRegister32(ESP, address+4)
+	return ret
+}
