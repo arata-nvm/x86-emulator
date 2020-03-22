@@ -12,7 +12,7 @@ func (emu *Emulator) getCode8(index int) uint32 {
 }
 
 func (emu *Emulator) getSignCode8(index int) int32 {
-	return int32(emu.Memory[emu.Eip+uint32(index)])
+	return int32(int8(emu.Memory[emu.Eip+uint32(index)]))
 }
 
 func (emu *Emulator) getCode32(index int) uint32 {

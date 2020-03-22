@@ -284,9 +284,9 @@ func jl(emu *Emulator) {
 func jle(emu *Emulator) {
 	var diff int32
 	if emu.isZero() || (emu.isSign() != emu.isOverflow()) {
-		diff = 0
-	} else {
 		diff = emu.getSignCode8(1)
+	} else {
+		diff = 0
 	}
 	emu.Eip += uint32(diff + 2)
 }
