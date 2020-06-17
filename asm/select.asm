@@ -26,7 +26,8 @@ fin:
     jmp 0
 puts:
     mov al, [esi]
-    inc esi
+    inc al
+    mov [esi], al
     cmp al, 0
     je putsend
     out dx, al
@@ -38,3 +39,5 @@ msghello:
     db "hello", 0x0d, 0x0a, 0
 msgworld:
     db "world", 0x0d, 0x0a, 0
+
+
